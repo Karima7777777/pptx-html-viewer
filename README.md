@@ -1,26 +1,32 @@
-# HTML-Viewer für PowerPoint
+# ECharts aus KNIME in PowerPoint
 
-PowerPoint-Add-in (Content-Add-in), das eine lokale HTML-Datei – z. B. einen
-ECharts-Export aus KNIME – interaktiv in eine Folie einbindet. Die Datei wird
-komprimiert **in der .pptx gespeichert**; sie wird nirgendwo hochgeladen.
-Funktioniert in PowerPoint für Windows und Mac (Microsoft 365).
+Anleitung für Teilnehmende: **https://karima7777777.github.io/pptx-html-viewer/**
 
-## Einmalig: auf GitHub Pages veröffentlichen
+Dieses Repository enthält
 
-1. Auf github.com: **New repository** → Name `pptx-html-viewer` → **Public** → **Create repository**.
-2. **uploading an existing file** → alle Dateien dieses Ordners hineinziehen
-   (`index.html`, `icon-*.png`, `README.md`) → **Commit changes**.
-3. **Settings → Pages** → *Source*: **Deploy from a branch** → Branch **main**, Ordner **/ (root)** → **Save**.
-4. Nach 1–2 Minuten ist die Seite erreichbar unter
-   `https://<ihr-github-name>.github.io/pptx-html-viewer/`.
+* den **HTML-Viewer** – ein PowerPoint-Add-in, das eine lokale HTML-Datei
+  (z. B. einen ECharts-Export aus KNIME) interaktiv in eine Folie einbindet.
+  Die Datei wird in der .pptx gespeichert und nirgendwo hochgeladen.
+* unter **Releases** die KNIME-Erweiterung **ECharts View & Export** als ZIP.
 
-Das Repository enthält nur das Programm, keine Daten.
+## Dateien
 
-## Einmalig pro Rechner: Add-in in PowerPoint bekannt machen
+| Datei | Zweck |
+|---|---|
+| `index.html` | Anleitungsseite **und** das Add-in selbst (mit `?addin=1`) |
+| `manifest.xml` | Beschreibt das Add-in für PowerPoint (Mac: in den `wef`-Ordner kopieren) |
+| `HTML-Viewer-installieren-Windows.cmd` | Trägt das Add-in in PowerPoint für Windows ein |
+| `HTML-Viewer-entfernen-Windows.cmd` | Entfernt es wieder |
+| `icon-*.png` | Symbole |
 
-Die Adresse aus Schritt 4 im Browser öffnen → **manifest.xml herunterladen**.
-Die Seite erklärt danach die Schritte für Windows und Mac.
+## KNIME-Erweiterung als Release bereitstellen (einmalig bzw. bei neuer Version)
 
-## Verwenden
+1. Im Repository rechts auf **Releases** → **Create a new release**.
+2. **Choose a tag** → `v1.0.0` eintippen → **Create new tag**.
+3. Titel: `ECharts View & Export 1.0.0`.
+4. Die Datei `ECharts-Export-KNIME-1.0.0.zip` in das Feld
+   *Attach binaries* ziehen und warten, bis der Upload fertig ist.
+5. **Publish release**.
 
-Einfügen → Add-ins → HTML-Viewer → Rahmen aufziehen → **HTML-Datei wählen …**
+Der Download-Knopf auf der Anleitungsseite zeigt automatisch auf die neueste
+Release-Datei mit genau diesem Namen.

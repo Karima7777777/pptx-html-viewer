@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HTML-Viewer für PowerPoint</title>
+<title>ECharts in PowerPoint</title>
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 <style>
   :root {
@@ -66,6 +66,15 @@
     font-family: Consolas, "SF Mono", Menlo, monospace; font-size: 13px; word-break: break-all; }
   .card { border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; background: var(--soft); }
   .note { background: var(--warn-bg); color: var(--warn-fg); border-radius: 6px; padding: 10px 14px; margin-top: 12px; }
+  #setup section { margin-top: 40px; }
+  #setup .card p { margin: 6px 0 12px; }
+  .muted { color: var(--muted); }
+  #setup .ok { background: var(--soft); border-left: 4px solid #2da44e; padding: 8px 12px; border-radius: 4px; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; }
+  .toc a { color: var(--accent); text-decoration: none; border: 1px solid var(--line); border-radius: 999px;
+    padding: 4px 12px; font-size: 14px; }
+  a.button { display: inline-block; text-decoration: none; border-radius: 6px; padding: 8px 16px; }
+  a.button.primary { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -90,53 +99,107 @@
 
 <!-- Setup page (opened in a normal browser) -->
 <div id="setup" class="hidden">
-  <h1>HTML-Viewer für PowerPoint</h1>
-  <p class="lead">Bindet eine lokale HTML-Datei (z. B. einen ECharts-Export) interaktiv in eine PowerPoint-Folie ein.
-    Die Datei wird in der .pptx gespeichert – sie wird nirgendwo hochgeladen.</p>
+  <h1>ECharts aus KNIME in PowerPoint</h1>
+  <p class="lead">Mit diesen zwei Erweiterungen erstellen Sie interaktive Diagramme in KNIME und zeigen sie
+    interaktiv in PowerPoint. Sie brauchen keine Programmierkenntnisse – folgen Sie einfach den Schritten.</p>
 
-  <div class="card">
-    <strong>Schritt 1: Manifest herunterladen</strong>
-    <p style="margin:6px 0 12px">Die Datei <code>manifest.xml</code> sagt PowerPoint, wo das Add-in liegt.
-      Sie ist bereits auf diese Adresse eingestellt:<br><code id="base"></code></p>
-    <button class="primary" id="download">manifest.xml herunterladen</button>
-  </div>
+  <nav class="toc">
+    <a href="#knime">Teil 1 – KNIME-Erweiterung</a>
+    <a href="#ppt-win">Teil 2 – PowerPoint (Windows)</a>
+    <a href="#ppt-mac">Teil 2 – PowerPoint (Mac)</a>
+    <a href="#nutzen">Teil 3 – Verwenden</a>
+  </nav>
 
-  <h2>Schritt 2 (Windows): Add-in in PowerPoint bekannt machen</h2>
-  <ol>
-    <li>Ordner anlegen, z. B. <code>C:\PowerPoint-Addins</code>, und <code>manifest.xml</code> hineinlegen.</li>
-    <li>Ordner freigeben: Rechtsklick → <em>Eigenschaften</em> → <em>Freigabe</em> → <em>Freigeben…</em> →
-      <em>Freigeben</em>. Die angezeigte Netzwerkadresse notieren, z. B. <code>\\MEIN-PC\PowerPoint-Addins</code>.</li>
-    <li>PowerPoint: <em>Datei → Optionen → Trust Center → Einstellungen für das Trust Center →
-      Vertrauenswürdige Add-In-Kataloge</em>.</li>
-    <li>Netzwerkadresse bei <em>Katalog-URL</em> eintragen → <em>Katalog hinzufügen</em> →
-      Haken bei <em>Im Menü anzeigen</em> → <em>OK</em>. PowerPoint schließen und neu öffnen.</li>
-  </ol>
+  <section id="knime">
+    <h2>Teil 1 – KNIME-Erweiterung „ECharts View &amp; Export“</h2>
+    <p class="muted">Einmalig pro Computer. Voraussetzung: KNIME Analytics Platform 5.12.</p>
+    <div class="card">
+      <strong>Schritt 1: Datei herunterladen</strong>
+      <p>Die Datei ist ca. 660 MB groß – der Download kann einige Minuten dauern.</p>
+      <a class="button primary" href="https://github.com/Karima7777777/pptx-html-viewer/releases/latest/download/ECharts-Export-KNIME-1.0.0.zip">KNIME-Erweiterung herunterladen (.zip)</a>
+      <p class="note">Wichtig: Die ZIP-Datei <b>nicht entpacken</b>. Verschieben Sie sie in einen Ordner, in dem sie
+        bleiben darf, z. B. <code>Dokumente</code>.</p>
+    </div>
+    <ol>
+      <li>KNIME öffnen.</li>
+      <li>Einstellungen öffnen:<br>
+        Windows: Menü <b>☰</b> (oben rechts) → <b>Preferences</b><br>
+        Mac: Menü <b>KNIME</b> (oben links in der Menüleiste) → <b>Settings…</b></li>
+      <li>Links <b>Install/Update</b> aufklappen → <b>Available Software Sites</b>.</li>
+      <li>Rechts <b>Add…</b> → <b>Archive…</b> → die ZIP-Datei auswählen → <b>Öffnen</b>.</li>
+      <li>Bei <b>Name</b> „ECharts Export“ eintragen → <b>Add</b> → <b>Apply and Close</b>.</li>
+      <li>Menü <b>☰</b> → <b>Install Extensions…</b> (Mac: Menü <b>File</b> → <b>Install KNIME Extensions…</b>).</li>
+      <li>Im Suchfeld <b>ECharts</b> eingeben → Haken bei <b>ECharts View &amp; Export</b> → <b>Next</b> → <b>Next</b>.</li>
+      <li><b>I accept the terms …</b> auswählen → <b>Finish</b>.</li>
+      <li>Es erscheint ein Hinweis auf „unsigned content“ → <b>Install anyway</b>.
+        <span class="muted">(Normal – die Erweiterung ist nicht von KNIME selbst signiert.)</span></li>
+      <li>Auf <b>Restart Now</b> klicken. Nach dem Neustart richtet KNIME die Erweiterung ein (kann einige Minuten dauern).</li>
+    </ol>
+    <p class="ok">Fertig, wenn Sie im Node-Repository unter <b>ECharts Export</b> den Node <b>ECharts View &amp; Export</b> finden.</p>
+  </section>
 
-  <h2>Schritt 2 (Mac): Add-in in PowerPoint bekannt machen</h2>
-  <ol>
-    <li>Im Finder <em>Cmd + Shift + G</em> drücken und eingeben:<br>
-      <code>~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef</code><br>
-      Falls der Ordner <code>wef</code> fehlt: im Ordner <code>Documents</code> neu anlegen.</li>
-    <li><code>manifest.xml</code> in diesen Ordner kopieren.</li>
-    <li>PowerPoint schließen und neu öffnen.</li>
-  </ol>
+  <section id="ppt-win">
+    <h2>Teil 2 – PowerPoint-Add-in „HTML-Viewer“ (Windows)</h2>
+    <p class="muted">Einmalig pro Computer. Voraussetzung: PowerPoint aus Microsoft 365.</p>
+    <div class="card">
+      <strong>Schritt 1: Installationsdatei herunterladen</strong>
+      <p></p>
+      <a class="button primary" href="HTML-Viewer-installieren-Windows.cmd" download>Installationsdatei herunterladen</a>
+    </div>
+    <ol>
+      <li>PowerPoint schließen.</li>
+      <li>Die heruntergeladene Datei <b>HTML-Viewer-installieren-Windows.cmd</b> doppelklicken
+        (zu finden im Ordner <b>Downloads</b>).</li>
+      <li>Falls Windows „Der Computer wurde durch Windows geschützt“ meldet:
+        <b>Weitere Informationen</b> → <b>Trotzdem ausführen</b>.
+        <span class="muted">(Die Datei trägt nur das Add-in in PowerPoint ein – nur für Ihr Benutzerkonto, ohne Administratorrechte.)</span></li>
+      <li>Es öffnet sich ein schwarzes Fenster mit „Fertig!“ → eine beliebige Taste drücken.</li>
+      <li>PowerPoint öffnen → Reiter <b>Start</b> → ganz rechts <b>Add-Ins</b> → <b>Weitere Add-Ins</b>.</li>
+      <li>Oben <b>Meine Add-Ins</b> wählen. Unter <b>Entwickler-Add-Ins</b> steht <b>HTML-Viewer</b> → anklicken → <b>Hinzufügen</b>.</li>
+    </ol>
+    <p class="muted">Wieder entfernen: <a href="HTML-Viewer-entfernen-Windows.cmd" download>Entfernen-Datei herunterladen</a> und doppelklicken.</p>
+  </section>
 
-  <h2>Schritt 3: Verwenden</h2>
-  <ol>
-    <li>Windows: <em>Einfügen → Add-ins → Meine Add-ins → Freigegebener Ordner → HTML-Viewer</em>.<br>
-      Mac: <em>Start → Add-ins</em> (bzw. <em>Einfügen → Add-ins</em>) → <em>HTML-Viewer</em>.</li>
-    <li>Den Rahmen auf die gewünschte Größe ziehen und <em>HTML-Datei wählen …</em> klicken.</li>
-    <li>Präsentation speichern. In der Bildschirmpräsentation ist die Darstellung voll interaktiv.</li>
-  </ol>
-  <p class="note">Das Add-in benötigt beim Öffnen der Präsentation eine Internetverbindung (es wird von dieser Adresse geladen).
-    Wer die .pptx öffnet, braucht das Add-in ebenfalls (Schritt 2) – sonst erscheint statt der Grafik ein Platzhalter.</p>
+  <section id="ppt-mac">
+    <h2>Teil 2 – PowerPoint-Add-in „HTML-Viewer“ (Mac)</h2>
+    <p class="muted">Einmalig pro Computer. Voraussetzung: PowerPoint aus Microsoft 365.</p>
+    <div class="card">
+      <strong>Schritt 1: Add-in-Datei herunterladen</strong>
+      <p></p>
+      <a class="button primary" href="manifest.xml" download>manifest.xml herunterladen</a>
+    </div>
+    <ol>
+      <li>PowerPoint beenden (Menü <b>PowerPoint</b> → <b>PowerPoint beenden</b>).</li>
+      <li>Den <b>Finder</b> öffnen und <b>Cmd + Shift + G</b> drücken.</li>
+      <li>Diese Zeile einfügen und <b>Enter</b> drücken:<br>
+        <code>~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/</code></li>
+      <li>Gibt es dort einen Ordner <b>wef</b>? Wenn nicht: Rechtsklick → <b>Neuer Ordner</b> → Name <b>wef</b>.</li>
+      <li>Ordner <b>wef</b> öffnen und die Datei <b>manifest.xml</b> aus <b>Downloads</b> hineinziehen.</li>
+      <li>PowerPoint öffnen → Reiter <b>Start</b> → <b>Add-Ins</b> → <b>HTML-Viewer</b>.</li>
+    </ol>
+  </section>
+
+  <section id="nutzen">
+    <h2>Teil 3 – Verwenden</h2>
+    <ol>
+      <li><b>In KNIME:</b> Node <b>ECharts View &amp; Export</b> in den Workflow ziehen und an Ihre Tabelle anschließen.</li>
+      <li>Doppelklick auf den Node → ECharts-Code einfügen → bei <b>Export-Datei</b> einen Pfad angeben,
+        z. B. <code>C:\Export\diagramm.json</code> → Haken bei <b>HTML-Datei speichern</b> lassen → <b>OK</b>.</li>
+      <li>Node ausführen. Neben der JSON-Datei liegt jetzt <b>diagramm.html</b>.</li>
+      <li><b>In PowerPoint:</b> Folie öffnen → <b>Start</b> → <b>Add-Ins</b> → <b>HTML-Viewer</b>.</li>
+      <li>Rahmen auf die gewünschte Größe ziehen → <b>HTML-Datei wählen …</b> → <b>diagramm.html</b> auswählen.</li>
+      <li>Präsentation speichern. In der Bildschirmpräsentation (F5) ist das Diagramm interaktiv.</li>
+    </ol>
+    <p class="note">Gut zu wissen: Das Diagramm wird in der .pptx gespeichert und nirgendwo hochgeladen.
+      Beim Öffnen der Präsentation braucht PowerPoint Internet, um das Add-in zu laden.
+      Wer Ihre Präsentation öffnet, braucht ebenfalls das Add-in (Teil 2) – sonst erscheint ein Platzhalter.</p>
+  </section>
 </div>
 
 <script>
 (function () {
   "use strict";
 
-  var ADDIN_ID = "a2399bcd-f19c-474d-bdd4-3de6511453bb";
   var KEY_COUNT = "hv_chunks";
   var KEY_NAME = "hv_name";
   var KEY_PREFIX = "hv_chunk_";
@@ -292,51 +355,7 @@
   }
 
   // ---------------------------------------------------------------- setup page
-  function baseUrl() {
-    return location.origin + location.pathname.replace(/[^/]*$/, "");
-  }
-
-  function manifestXml(base) {
-    return '<?xml version="1.0" encoding="UTF-8"?>\n' +
-      '<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"\n' +
-      '           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' +
-      '           xsi:type="ContentApp">\n' +
-      '  <Id>' + ADDIN_ID + '</Id>\n' +
-      '  <Version>1.0.0.0</Version>\n' +
-      '  <ProviderName>Karima Charles</ProviderName>\n' +
-      '  <DefaultLocale>de-DE</DefaultLocale>\n' +
-      '  <DisplayName DefaultValue="HTML-Viewer"/>\n' +
-      '  <Description DefaultValue="Bindet eine lokale HTML-Datei (z. B. einen ECharts-Export) interaktiv in eine Folie ein. Die Datei wird in der Präsentation gespeichert."/>\n' +
-      '  <IconUrl DefaultValue="' + base + 'icon-32.png"/>\n' +
-      '  <HighResolutionIconUrl DefaultValue="' + base + 'icon-64.png"/>\n' +
-      '  <SupportUrl DefaultValue="' + base + 'index.html"/>\n' +
-      '  <Hosts>\n' +
-      '    <Host Name="Presentation"/>\n' +
-      '  </Hosts>\n' +
-      '  <DefaultSettings>\n' +
-      '    <SourceLocation DefaultValue="' + base + 'index.html?addin=1"/>\n' +
-      '    <RequestedWidth>800</RequestedWidth>\n' +
-      '    <RequestedHeight>450</RequestedHeight>\n' +
-      '  </DefaultSettings>\n' +
-      '  <Permissions>ReadWriteDocument</Permissions>\n' +
-      '  <AllowSnapshot>true</AllowSnapshot>\n' +
-      '</OfficeApp>\n';
-  }
-
-  function startSetup() {
-    show($("setup"), true);
-    var base = baseUrl();
-    $("base").textContent = base;
-    $("download").addEventListener("click", function () {
-      var blob = new Blob([manifestXml(base)], { type: "application/xml" });
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "manifest.xml";
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-    });
-  }
+  function startSetup() { show($("setup"), true); }
 
   // ---------------------------------------------------------------- start
   if (isAddin && typeof Office !== "undefined") {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:type="ContentApp">
+  <Id>a2399bcd-f19c-474d-bdd4-3de6511453bb</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Karima Charles</ProviderName>
+  <DefaultLocale>de-DE</DefaultLocale>
+  <DisplayName DefaultValue="HTML-Viewer"/>
+  <Description DefaultValue="Bindet eine lokale HTML-Datei (z. B. einen ECharts-Export) interaktiv in eine Folie ein. Die Datei wird in der Präsentation gespeichert."/>
+  <IconUrl DefaultValue="https://karima7777777.github.io/pptx-html-viewer/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://karima7777777.github.io/pptx-html-viewer/icon-64.png"/>
+  <SupportUrl DefaultValue="https://karima7777777.github.io/pptx-html-viewer/index.html"/>
+  <Hosts>
+    <Host Name="Presentation"/>
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://karima7777777.github.io/pptx-html-viewer/index.html?addin=1"/>
+    <RequestedWidth>800</RequestedWidth>
+    <RequestedHeight>450</RequestedHeight>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <AllowSnapshot>true</AllowSnapshot>
+</OfficeApp>
