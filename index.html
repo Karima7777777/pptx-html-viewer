@@ -75,6 +75,9 @@
     padding: 4px 12px; font-size: 14px; }
   a.button { display: inline-block; text-decoration: none; border-radius: 6px; padding: 8px 16px; }
   a.button.primary { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
+  .flow { margin: 20px 0; }
+  .flow-steps li { margin: 8px 0; }
+  .order { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; margin: 8px 0 0; }
 </style>
 </head>
 <body>
@@ -108,15 +111,30 @@
     von KNIME oder Microsoft. Sie werden so zur Verfügung gestellt, wie sie sind – <b>ohne Support</b>.
     Die Nutzung erfolgt auf eigene Verantwortung.</p>
 
+  <div class="card flow">
+    <strong>So funktioniert es</strong>
+    <p>Du brauchst <b>zwei</b> Erweiterungen. Sie arbeiten zusammen wie ein Fotoapparat und ein Bilderrahmen:</p>
+    <ol class="flow-steps">
+      <li><b>KNIME-Node „ECharts View &amp; Export“</b> – erstellt dein Diagramm und speichert es als Datei
+        (z. B. <code>diagramm.html</code>). <span class="muted">Der Fotoapparat.</span></li>
+      <li><b>PowerPoint-Add-in „HTML-Viewer“</b> – zeigt diese Datei interaktiv in deiner Folie an.
+        <span class="muted">Der Bilderrahmen.</span></li>
+    </ol>
+    <p>Ohne den KNIME-Node hast du keine Datei. Ohne das Add-in kann PowerPoint die Datei nicht anzeigen.
+      Deshalb installierst du <b>beide</b> – einmalig, in dieser Reihenfolge:</p>
+    <p class="order"><b>Teil 1</b> KNIME-Node installieren &nbsp;→&nbsp; <b>Teil 2</b> PowerPoint-Add-in installieren
+      &nbsp;→&nbsp; <b>Teil 3</b> verwenden</p>
+  </div>
+
   <nav class="toc">
-    <a href="#knime">Teil 1 – KNIME-Erweiterung</a>
-    <a href="#ppt-win">Teil 2 – PowerPoint (Windows)</a>
-    <a href="#ppt-mac">Teil 2 – PowerPoint (Mac)</a>
+    <a href="#knime">Teil 1 – KNIME-Node</a>
+    <a href="#ppt-win">Teil 2 – PowerPoint-Add-in (Windows)</a>
+    <a href="#ppt-mac">Teil 2 – PowerPoint-Add-in (Mac)</a>
     <a href="#nutzen">Teil 3 – Verwenden</a>
   </nav>
 
   <section id="knime">
-    <h2>Teil 1 – KNIME-Erweiterung „ECharts View &amp; Export“</h2>
+    <h2>Teil 1 – KNIME-Node „ECharts View &amp; Export“ installieren</h2>
     <p class="muted">Einmalig pro Computer. Voraussetzung: KNIME Analytics Platform 5.12.</p>
     <div class="card">
       <strong>Schritt 1: Datei herunterladen</strong>
@@ -144,8 +162,8 @@
   </section>
 
   <section id="ppt-win">
-    <h2>Teil 2 – PowerPoint-Add-in „HTML-Viewer“ (Windows)</h2>
-    <p class="muted">Einmalig pro Computer. Voraussetzung: PowerPoint aus Microsoft 365.</p>
+    <h2>Teil 2 – PowerPoint-Add-in „HTML-Viewer“ installieren: Windows</h2>
+    <p class="muted">Nur wenn du einen <b>Windows-PC</b> hast – mit Mac geht es <a href="#ppt-mac">weiter unten</a>. Einmalig pro Computer. Voraussetzung: PowerPoint aus Microsoft 365.</p>
     <div class="card">
       <strong>Schritt 1: Installationsdatei herunterladen</strong>
       <p></p>
@@ -166,8 +184,8 @@
   </section>
 
   <section id="ppt-mac">
-    <h2>Teil 2 – PowerPoint-Add-in „HTML-Viewer“ (Mac)</h2>
-    <p class="muted">Einmalig pro Computer. Voraussetzung: PowerPoint aus Microsoft 365.</p>
+    <h2>Teil 2 – PowerPoint-Add-in „HTML-Viewer“ installieren: Mac</h2>
+    <p class="muted">Nur wenn du einen <b>Mac</b> hast. Einmalig pro Computer. Voraussetzung: PowerPoint aus Microsoft 365.</p>
     <div class="card">
       <strong>Schritt 1: Add-in-Datei herunterladen</strong>
       <p></p>
