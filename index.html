@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML-Viewer für PowerPoint</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #59636e;
+    --line: #d1d9e0;
+    --accent: #0f6cbd;
+    --accent-fg: #ffffff;
+    --soft: #f6f8fa;
+    --warn-bg: #fff8c5;
+    --warn-fg: #7d4e00;
+    --err-bg: #fdecea;
+    --err-fg: #8a1c12;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16191d; --fg: #e6edf3; --muted: #9198a1; --line: #3d444d;
+      --accent: #4c9be8; --accent-fg: #0d1117; --soft: #1f2328;
+      --warn-bg: #3a2e05; --warn-fg: #f2cc60; --err-bg: #3d1512; --err-fg: #ffb4ab;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16191d; --fg: #e6edf3; --muted: #9198a1; --line: #3d444d;
+    --accent: #4c9be8; --accent-fg: #0d1117; --soft: #1f2328;
+    --warn-bg: #3a2e05; --warn-fg: #f2cc60; --err-bg: #3d1512; --err-fg: #ffb4ab;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--fg);
+    font: 15px/1.5 "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif; }
+  button { font: inherit; cursor: pointer; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--soft); color: var(--fg); padding: 6px 14px; }
+  button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+  .hidden { display: none !important; }
+
+  /* ---------- add-in mode ---------- */
+  #addin { position: fixed; inset: 0; }
+  #frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+  #empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 12px; padding: 16px; text-align: center; border: 2px dashed var(--line); }
+  #empty.drag { border-color: var(--accent); background: var(--soft); }
+  #empty p { margin: 0; color: var(--muted); max-width: 32em; }
+  #toolbar { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; opacity: 0;
+    transition: opacity .15s; z-index: 5; }
+  #addin:hover #toolbar { opacity: 1; }
+  #toolbar button { padding: 3px 10px; font-size: 13px; background: rgba(255,255,255,.92); color: #1f2328; border-color: #d1d9e0; }
+  #status { position: absolute; left: 8px; bottom: 8px; right: 8px; padding: 8px 12px; border-radius: 6px;
+    font-size: 13px; z-index: 6; }
+  #status.info { background: var(--soft); color: var(--fg); border: 1px solid var(--line); }
+  #status.error { background: var(--err-bg); color: var(--err-fg); }
+
+  /* ---------- setup page ---------- */
+  #setup { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  #setup h1 { font-size: 26px; margin: 0 0 4px; }
+  #setup h2 { font-size: 18px; margin: 32px 0 8px; }
+  #setup .lead { color: var(--muted); margin: 0 0 24px; }
+  #setup ol { padding-left: 1.3em; }
+  #setup li { margin: 6px 0; }
+  #setup code { background: var(--soft); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px;
+    font-family: Consolas, "SF Mono", Menlo, monospace; font-size: 13px; word-break: break-all; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; background: var(--soft); }
+  .note { background: var(--warn-bg); color: var(--warn-fg); border-radius: 6px; padding: 10px 14px; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Add-in in a slide -->
+<div id="addin" class="hidden">
+  <iframe id="frame" class="hidden" title="Eingebundene HTML-Datei"
+          sandbox="allow-scripts allow-popups allow-modals allow-downloads"></iframe>
+  <div id="empty" class="hidden">
+    <strong>HTML-Datei in diese Folie einbinden</strong>
+    <p>Die Datei wird in der Präsentation gespeichert und hier interaktiv angezeigt – auch in der Bildschirmpräsentation.</p>
+    <button class="primary" id="pick">HTML-Datei wählen …</button>
+    <p>oder Datei hierher ziehen</p>
+  </div>
+  <div id="toolbar" class="hidden">
+    <button id="replace" title="Andere HTML-Datei einbinden">Datei ersetzen</button>
+    <button id="reload" title="Ansicht neu laden">Neu laden</button>
+  </div>
+  <div id="status" class="hidden"></div>
+  <input type="file" id="file" accept=".html,.htm,text/html" class="hidden">
+</div>
+
+<!-- Setup page (opened in a normal browser) -->
+<div id="setup" class="hidden">
+  <h1>HTML-Viewer für PowerPoint</h1>
+  <p class="lead">Bindet eine lokale HTML-Datei (z. B. einen ECharts-Export) interaktiv in eine PowerPoint-Folie ein.
+    Die Datei wird in der .pptx gespeichert – sie wird nirgendwo hochgeladen.</p>
+
+  <div class="card">
+    <strong>Schritt 1: Manifest herunterladen</strong>
+    <p style="margin:6px 0 12px">Die Datei <code>manifest.xml</code> sagt PowerPoint, wo das Add-in liegt.
+      Sie ist bereits auf diese Adresse eingestellt:<br><code id="base"></code></p>
+    <button class="primary" id="download">manifest.xml herunterladen</button>
+  </div>
+
+  <h2>Schritt 2 (Windows): Add-in in PowerPoint bekannt machen</h2>
+  <ol>
+    <li>Ordner anlegen, z. B. <code>C:\PowerPoint-Addins</code>, und <code>manifest.xml</code> hineinlegen.</li>
+    <li>Ordner freigeben: Rechtsklick → <em>Eigenschaften</em> → <em>Freigabe</em> → <em>Freigeben…</em> →
+      <em>Freigeben</em>. Die angezeigte Netzwerkadresse notieren, z. B. <code>\\MEIN-PC\PowerPoint-Addins</code>.</li>
+    <li>PowerPoint: <em>Datei → Optionen → Trust Center → Einstellungen für das Trust Center →
+      Vertrauenswürdige Add-In-Kataloge</em>.</li>
+    <li>Netzwerkadresse bei <em>Katalog-URL</em> eintragen → <em>Katalog hinzufügen</em> →
+      Haken bei <em>Im Menü anzeigen</em> → <em>OK</em>. PowerPoint schließen und neu öffnen.</li>
+  </ol>
+
+  <h2>Schritt 2 (Mac): Add-in in PowerPoint bekannt machen</h2>
+  <ol>
+    <li>Im Finder <em>Cmd + Shift + G</em> drücken und eingeben:<br>
+      <code>~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef</code><br>
+      Falls der Ordner <code>wef</code> fehlt: im Ordner <code>Documents</code> neu anlegen.</li>
+    <li><code>manifest.xml</code> in diesen Ordner kopieren.</li>
+    <li>PowerPoint schließen und neu öffnen.</li>
+  </ol>
+
+  <h2>Schritt 3: Verwenden</h2>
+  <ol>
+    <li>Windows: <em>Einfügen → Add-ins → Meine Add-ins → Freigegebener Ordner → HTML-Viewer</em>.<br>
+      Mac: <em>Start → Add-ins</em> (bzw. <em>Einfügen → Add-ins</em>) → <em>HTML-Viewer</em>.</li>
+    <li>Den Rahmen auf die gewünschte Größe ziehen und <em>HTML-Datei wählen …</em> klicken.</li>
+    <li>Präsentation speichern. In der Bildschirmpräsentation ist die Darstellung voll interaktiv.</li>
+  </ol>
+  <p class="note">Das Add-in benötigt beim Öffnen der Präsentation eine Internetverbindung (es wird von dieser Adresse geladen).
+    Wer die .pptx öffnet, braucht das Add-in ebenfalls (Schritt 2) – sonst erscheint statt der Grafik ein Platzhalter.</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var ADDIN_ID = "a2399bcd-f19c-474d-bdd4-3de6511453bb";
+  var KEY_COUNT = "hv_chunks";
+  var KEY_NAME = "hv_name";
+  var KEY_PREFIX = "hv_chunk_";
+  var CHUNK_SIZE = 200000; // characters of base64 per settings entry
+  var isAddin = /[?&]addin=1\b/.test(location.search);
+
+  // ---------------------------------------------------------------- helpers
+  function $(id) { return document.getElementById(id); }
+  function show(el, on) { el.classList.toggle("hidden", !on); }
+  var statusTimer = null;
+  function status(text, kind, sticky) {
+    var el = $("status");
+    clearTimeout(statusTimer);
+    if (!text) { show(el, false); return; }
+    el.textContent = text;
+    el.className = kind || "info";
+    if (!sticky) { statusTimer = setTimeout(function () { show(el, false); }, 4000); }
+  }
+
+  function bytesToBase64(bytes) {
+    var parts = [], step = 0x8000;
+    for (var i = 0; i < bytes.length; i += step) {
+      parts.push(String.fromCharCode.apply(null, bytes.subarray(i, i + step)));
+    }
+    return btoa(parts.join(""));
+  }
+  function base64ToBytes(b64) {
+    var bin = atob(b64), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) { out[i] = bin.charCodeAt(i); }
+    return out;
+  }
+  async function gzip(text) {
+    var stream = new Blob([text]).stream().pipeThrough(new CompressionStream("gzip"));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+  async function gunzip(bytes) {
+    var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+    return await new Response(stream).text();
+  }
+
+  // ---------------------------------------------------------------- add-in
+  function settings() { return Office.context.document.settings; }
+
+  function saveSettings() {
+    return new Promise(function (resolve, reject) {
+      settings().saveAsync(function (r) {
+        if (r.status === Office.AsyncResultStatus.Succeeded) { resolve(); }
+        else { reject(r.error || new Error("Speichern fehlgeschlagen")); }
+      });
+    });
+  }
+
+  async function storeHtml(html, name) {
+    var b64 = bytesToBase64(await gzip(html));
+    var s = settings();
+    var oldCount = parseInt(s.get(KEY_COUNT) || "0", 10);
+    var count = Math.ceil(b64.length / CHUNK_SIZE);
+    for (var i = 0; i < count; i++) {
+      s.set(KEY_PREFIX + i, b64.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE));
+    }
+    for (var j = count; j < oldCount; j++) { s.remove(KEY_PREFIX + j); }
+    s.set(KEY_COUNT, String(count));
+    s.set(KEY_NAME, name || "");
+    await saveSettings();
+  }
+
+  async function loadHtml() {
+    var s = settings();
+    var count = parseInt(s.get(KEY_COUNT) || "0", 10);
+    if (!count) { return null; }
+    var b64 = "";
+    for (var i = 0; i < count; i++) {
+      var part = s.get(KEY_PREFIX + i);
+      if (typeof part !== "string") { throw new Error("Gespeicherte Datei ist unvollständig (Teil " + (i + 1) + " fehlt)."); }
+      b64 += part;
+    }
+    return await gunzip(base64ToBytes(b64));
+  }
+
+  var currentHtml = null;
+  function render(html) {
+    currentHtml = html;
+    var frame = $("frame");
+    if (html) {
+      frame.srcdoc = html;
+      show(frame, true);
+      show($("empty"), false);
+    } else {
+      frame.removeAttribute("srcdoc");
+      show(frame, false);
+      show($("empty"), true);
+    }
+    updateToolbar();
+  }
+
+  var viewMode = "edit";
+  function updateToolbar() {
+    show($("toolbar"), !!currentHtml && viewMode !== "read");
+  }
+
+  async function handleFile(file) {
+    if (!file) { return; }
+    if (!/\.html?$/i.test(file.name) && file.type !== "text/html") {
+      status("Bitte eine .html-Datei wählen.", "error");
+      return;
+    }
+    try {
+      status("Datei wird eingebunden …", "info", true);
+      var html = await file.text();
+      await storeHtml(html, file.name);
+      render(html);
+      status("„" + file.name + "“ eingebunden und in der Präsentation gespeichert.", "info");
+    } catch (err) {
+      status("Die Datei konnte nicht gespeichert werden: " + (err && err.message ? err.message : err) +
+        " – die Ansicht gilt nur bis zum Schließen der Präsentation.", "error", true);
+    }
+  }
+
+  function startAddin() {
+    show($("addin"), true);
+    var input = $("file");
+    $("pick").addEventListener("click", function () { input.click(); });
+    $("replace").addEventListener("click", function () { input.click(); });
+    $("reload").addEventListener("click", function () { render(currentHtml); });
+    input.addEventListener("change", function () { handleFile(input.files[0]); input.value = ""; });
+
+    var empty = $("empty");
+    ["dragenter", "dragover"].forEach(function (t) {
+      empty.addEventListener(t, function (e) { e.preventDefault(); empty.classList.add("drag"); });
+    });
+    ["dragleave", "drop"].forEach(function (t) {
+      empty.addEventListener(t, function (e) { e.preventDefault(); empty.classList.remove("drag"); });
+    });
+    empty.addEventListener("drop", function (e) {
+      handleFile(e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files[0] : null);
+    });
+
+    // Hide the toolbar during the slide show ("read" view).
+    var doc = Office.context.document;
+    if (doc.getActiveViewAsync) {
+      doc.getActiveViewAsync(function (r) {
+        if (r.status === Office.AsyncResultStatus.Succeeded) { viewMode = r.value; updateToolbar(); }
+      });
+      try {
+        doc.addHandlerAsync(Office.EventType.ActiveViewChanged, function (e) { viewMode = e.activeView; updateToolbar(); });
+      } catch (e) { /* not supported on this platform */ }
+    }
+
+    loadHtml().then(render).catch(function (err) {
+      render(null);
+      status("Gespeicherte Datei konnte nicht geladen werden: " + err.message, "error", true);
+    });
+  }
+
+  // ---------------------------------------------------------------- setup page
+  function baseUrl() {
+    return location.origin + location.pathname.replace(/[^/]*$/, "");
+  }
+
+  function manifestXml(base) {
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"\n' +
+      '           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' +
+      '           xsi:type="ContentApp">\n' +
+      '  <Id>' + ADDIN_ID + '</Id>\n' +
+      '  <Version>1.0.0.0</Version>\n' +
+      '  <ProviderName>Karima Charles</ProviderName>\n' +
+      '  <DefaultLocale>de-DE</DefaultLocale>\n' +
+      '  <DisplayName DefaultValue="HTML-Viewer"/>\n' +
+      '  <Description DefaultValue="Bindet eine lokale HTML-Datei (z. B. einen ECharts-Export) interaktiv in eine Folie ein. Die Datei wird in der Präsentation gespeichert."/>\n' +
+      '  <IconUrl DefaultValue="' + base + 'icon-32.png"/>\n' +
+      '  <HighResolutionIconUrl DefaultValue="' + base + 'icon-64.png"/>\n' +
+      '  <SupportUrl DefaultValue="' + base + 'index.html"/>\n' +
+      '  <Hosts>\n' +
+      '    <Host Name="Presentation"/>\n' +
+      '  </Hosts>\n' +
+      '  <DefaultSettings>\n' +
+      '    <SourceLocation DefaultValue="' + base + 'index.html?addin=1"/>\n' +
+      '    <RequestedWidth>800</RequestedWidth>\n' +
+      '    <RequestedHeight>450</RequestedHeight>\n' +
+      '  </DefaultSettings>\n' +
+      '  <Permissions>ReadWriteDocument</Permissions>\n' +
+      '  <AllowSnapshot>true</AllowSnapshot>\n' +
+      '</OfficeApp>\n';
+  }
+
+  function startSetup() {
+    show($("setup"), true);
+    var base = baseUrl();
+    $("base").textContent = base;
+    $("download").addEventListener("click", function () {
+      var blob = new Blob([manifestXml(base)], { type: "application/xml" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "manifest.xml";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    });
+  }
+
+  // ---------------------------------------------------------------- start
+  if (isAddin && typeof Office !== "undefined") {
+    Office.onReady(function () { startAddin(); });
+  } else if (isAddin) {
+    show($("addin"), true);
+    render(null);
+    status("Office konnte nicht geladen werden. Bitte Internetverbindung prüfen und die Präsentation neu öffnen.", "error", true);
+  } else {
+    startSetup();
+  }
+})();
+</script>
+</body>
+</html>
