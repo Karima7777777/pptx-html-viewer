@@ -78,6 +78,10 @@
   .flow { margin: 20px 0; }
   .flow-steps li { margin: 8px 0; }
   .order { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; margin: 8px 0 0; }
+  .langswitch { display: flex; justify-content: flex-end; gap: 4px; margin-bottom: 8px; }
+  .langswitch a { color: var(--muted); text-decoration: none; padding: 3px 10px; border-radius: 999px;
+    border: 1px solid transparent; font-size: 14px; }
+  .langswitch a.active { color: var(--fg); border-color: var(--line); background: var(--soft); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -87,14 +91,14 @@
   <iframe id="frame" class="hidden" title="Eingebundene HTML-Datei"
           sandbox="allow-scripts allow-popups allow-modals allow-downloads"></iframe>
   <div id="empty" class="hidden">
-    <strong>HTML-Datei in diese Folie einbinden</strong>
-    <p>Die Datei wird in der Präsentation gespeichert und hier interaktiv angezeigt – auch in der Bildschirmpräsentation.</p>
-    <button class="primary" id="pick">HTML-Datei wählen …</button>
-    <p>oder Datei hierher ziehen</p>
+    <strong data-t="emptyTitle">HTML-Datei in diese Folie einbinden</strong>
+    <p data-t="emptyText">Die Datei wird in der Präsentation gespeichert und hier interaktiv angezeigt – auch in der Bildschirmpräsentation.</p>
+    <button class="primary" id="pick" data-t="pick">HTML-Datei wählen …</button>
+    <p data-t="drop">oder Datei hierher ziehen</p>
   </div>
   <div id="toolbar" class="hidden">
-    <button id="replace" title="Andere HTML-Datei einbinden">Datei ersetzen</button>
-    <button id="reload" title="Ansicht neu laden">Neu laden</button>
+    <button id="replace" data-t="replace">Datei ersetzen</button>
+    <button id="reload" data-t="reload">Neu laden</button>
   </div>
   <div id="status" class="hidden"></div>
   <input type="file" id="file" accept=".html,.htm,text/html" class="hidden">
@@ -102,6 +106,11 @@
 
 <!-- Setup page (opened in a normal browser) -->
 <div id="setup" class="hidden">
+  <div class="langswitch" role="group" aria-label="Sprache / Language">
+    <a href="?lang=de" data-set-lang="de">Deutsch</a>
+    <a href="?lang=en" data-set-lang="en">English</a>
+  </div>
+  <div class="lang-block" data-lang="de" lang="de">
   <h1>ECharts aus KNIME in PowerPoint</h1>
   <p class="lead">Du kennst den <b>Generic ECharts View</b> in KNIME? Mit diesen zwei Erweiterungen nimmst du deine
     ECharts-Diagramme mit in PowerPoint – und sie bleiben dort interaktiv. Du brauchst keine Programmierkenntnisse,
@@ -218,6 +227,126 @@
       Beim Öffnen der Präsentation braucht PowerPoint Internet, um das Add-in zu laden.
       Wer deine Präsentation öffnet, braucht ebenfalls das Add-in (Teil 2) – sonst erscheint ein Platzhalter.</p>
   </section>
+  </div>
+  <div class="lang-block" data-lang="en" lang="en">
+  <h1>ECharts from KNIME in PowerPoint</h1>
+  <p class="lead">You know the <b>Generic ECharts View</b> in KNIME? With these two extensions you take your
+    ECharts visualizations into PowerPoint – and they stay interactive there. No coding needed,
+    just follow the steps.</p>
+
+  <p class="note"><b>Please note:</b> Both extensions are an AI-assisted personal project and not an official product
+    of KNIME or Microsoft. They are provided as they are – <b>without support</b>. Use at your own risk.</p>
+
+  <div class="card flow">
+    <strong>How it works</strong>
+    <p>You need <b>two</b> extensions. They work together like a camera and a picture frame:</p>
+    <ol class="flow-steps">
+      <li><b>KNIME node “ECharts View &amp; Export”</b> – creates your chart and saves it as a file
+        (e.g. <code>chart.html</code>). <span class="muted">The camera.</span></li>
+      <li><b>PowerPoint add-in “HTML-Viewer”</b> – shows this file interactively in your slide.
+        <span class="muted">The picture frame.</span></li>
+    </ol>
+    <p>Without the KNIME node you have no file. Without the add-in PowerPoint cannot show the file.
+      That’s why you install <b>both</b> – once, in this order:</p>
+    <p class="order"><b>Part 1</b> install the KNIME node &nbsp;→&nbsp; <b>Part 2</b> install the PowerPoint add-in
+      &nbsp;→&nbsp; <b>Part 3</b> use it</p>
+  </div>
+
+  <nav class="toc">
+    <a href="#knime-en">Part 1 – KNIME node</a>
+    <a href="#ppt-win-en">Part 2 – PowerPoint add-in (Windows)</a>
+    <a href="#ppt-mac-en">Part 2 – PowerPoint add-in (Mac)</a>
+    <a href="#use-en">Part 3 – Use it</a>
+  </nav>
+
+  <section id="knime-en">
+    <h2>Part 1 – Install the KNIME node “ECharts View &amp; Export”</h2>
+    <p class="muted">Once per computer. Requires KNIME Analytics Platform 5.12.</p>
+    <div class="card">
+      <strong>Step 1: Download the file</strong>
+      <p>The file is about 660 MB – the download may take a few minutes.</p>
+      <a class="button primary" href="https://github.com/Karima7777777/pptx-html-viewer/releases/latest/download/ECharts-Export-KNIME-1.0.0.zip">Download the KNIME extension (.zip)</a>
+      <p class="note">Important: <b>do not unzip</b> the file. Move it to a folder where it can stay,
+        e.g. <code>Documents</code>.</p>
+    </div>
+    <ol>
+      <li>Open KNIME.</li>
+      <li>Open the settings:<br>
+        Windows: menu <b>☰</b> (top right) → <b>Preferences</b><br>
+        Mac: menu <b>KNIME</b> (top left in the menu bar) → <b>Settings…</b></li>
+      <li>On the left, expand <b>Install/Update</b> → <b>Available Software Sites</b>.</li>
+      <li>On the right, <b>Add…</b> → <b>Archive…</b> → select the ZIP file → <b>Open</b>.</li>
+      <li>Enter “ECharts Export” as <b>Name</b> → <b>Add</b> → <b>Apply and Close</b>.</li>
+      <li>Menu <b>☰</b> → <b>Install Extensions…</b> (Mac: menu <b>File</b> → <b>Install KNIME Extensions…</b>).</li>
+      <li>Type <b>ECharts</b> into the search field → tick <b>ECharts View &amp; Export</b> → <b>Next</b> → <b>Next</b>.</li>
+      <li>Select <b>I accept the terms …</b> → <b>Finish</b>.</li>
+      <li>A message about “unsigned content” appears → <b>Install anyway</b>.
+        <span class="muted">(This is normal – the extension is not signed by KNIME itself.)</span></li>
+      <li>Click <b>Restart Now</b>. After the restart KNIME sets up the extension (this can take a few minutes).</li>
+    </ol>
+    <p class="ok">Done when you find the node <b>ECharts View &amp; Export</b> in the node repository under <b>ECharts Export</b>.</p>
+    <p class="muted">Note: the node’s settings dialog is in German. The fields you need are <b>ECharts-Code</b> (your code),
+      <b>Export-Datei (.json)</b> (export file) and <b>Zusätzlich eigenständige HTML-Datei speichern</b> (also save an HTML file).</p>
+  </section>
+
+  <section id="ppt-win-en">
+    <h2>Part 2 – Install the PowerPoint add-in “HTML-Viewer”: Windows</h2>
+    <p class="muted">Only if you have a <b>Windows PC</b> – for Mac see <a href="#ppt-mac-en">below</a>.
+      Once per computer. Requires PowerPoint from Microsoft 365.</p>
+    <div class="card">
+      <strong>Step 1: Download the setup file</strong>
+      <p></p>
+      <a class="button primary" href="HTML-Viewer-installieren-Windows.cmd" download>Download the setup file</a>
+    </div>
+    <ol>
+      <li>Close PowerPoint.</li>
+      <li>Double-click the downloaded file <b>HTML-Viewer-installieren-Windows.cmd</b>
+        (you find it in your <b>Downloads</b> folder).</li>
+      <li>If Windows says “Windows protected your PC”: <b>More info</b> → <b>Run anyway</b>.
+        <span class="muted">(The file only registers the add-in in PowerPoint – for your user account only, no admin rights.)</span></li>
+      <li>A black window opens and says “Fertig!” (done) → press any key.</li>
+      <li>Open PowerPoint → tab <b>Home</b> → far right <b>Add-ins</b> → <b>More Add-ins</b>.</li>
+      <li>Choose <b>My Add-ins</b> at the top. Under <b>Developer Add-ins</b> you see <b>HTML-Viewer</b> → click it → <b>Add</b>.</li>
+    </ol>
+    <p class="muted">To remove it again: <a href="HTML-Viewer-entfernen-Windows.cmd" download>download the removal file</a> and double-click it.</p>
+  </section>
+
+  <section id="ppt-mac-en">
+    <h2>Part 2 – Install the PowerPoint add-in “HTML-Viewer”: Mac</h2>
+    <p class="muted">Only if you have a <b>Mac</b>. Once per computer. Requires PowerPoint from Microsoft 365.</p>
+    <div class="card">
+      <strong>Step 1: Download the add-in file</strong>
+      <p></p>
+      <a class="button primary" href="manifest.xml" download>Download manifest.xml</a>
+    </div>
+    <ol>
+      <li>Quit PowerPoint (menu <b>PowerPoint</b> → <b>Quit PowerPoint</b>).</li>
+      <li>Open <b>Finder</b> and press <b>Cmd + Shift + G</b>.</li>
+      <li>Paste this line and press <b>Enter</b>:<br>
+        <code>~/Library/Containers/com.microsoft.Powerpoint/Data/Documents/</code></li>
+      <li>Is there a folder called <b>wef</b>? If not: right-click → <b>New Folder</b> → name it <b>wef</b>.</li>
+      <li>Open the <b>wef</b> folder and drag the file <b>manifest.xml</b> from <b>Downloads</b> into it.</li>
+      <li>Open PowerPoint → tab <b>Home</b> → <b>Add-ins</b> → <b>HTML-Viewer</b>.</li>
+    </ol>
+  </section>
+
+  <section id="use-en">
+    <h2>Part 3 – Use it</h2>
+    <ol>
+      <li><b>In KNIME:</b> drag the node <b>ECharts View &amp; Export</b> into your workflow and connect it to your table.</li>
+      <li>Double-click the node → paste your ECharts code (exactly as in the Generic ECharts View) →
+        enter a path at <b>Export-Datei</b>, e.g. <code>C:\Export\chart.json</code> →
+        keep the tick at <b>HTML-Datei speichern</b> → <b>OK</b>.</li>
+      <li>Run the node. Next to the JSON file you now find <b>chart.html</b>.</li>
+      <li><b>In PowerPoint:</b> open a slide → <b>Home</b> → <b>Add-ins</b> → <b>HTML-Viewer</b>.</li>
+      <li>Drag the frame to the size you want → <b>Choose HTML file …</b> → select <b>chart.html</b>.</li>
+      <li>Save the presentation. In slide show mode (F5) the chart is interactive.</li>
+    </ol>
+    <p class="note">Good to know: the chart is saved inside your .pptx and is not uploaded anywhere.
+      When opening the presentation, PowerPoint needs internet to load the add-in.
+      Anyone who opens your presentation also needs the add-in (Part 2) – otherwise they see a placeholder.</p>
+  </section>
+  </div>
 </div>
 
 <script>
@@ -229,6 +358,48 @@
   var KEY_PREFIX = "hv_chunk_";
   var CHUNK_SIZE = 200000; // characters of base64 per settings entry
   var isAddin = /[?&]addin=1\b/.test(location.search);
+
+  // ---------------------------------------------------------------- texts
+  var TEXTS = {
+    de: {
+      emptyTitle: "HTML-Datei in diese Folie einbinden",
+      emptyText: "Die Datei wird in der Präsentation gespeichert und hier interaktiv angezeigt – auch in der Bildschirmpräsentation.",
+      pick: "HTML-Datei wählen …", drop: "oder Datei hierher ziehen",
+      replace: "Datei ersetzen", reload: "Neu laden",
+      notHtml: "Bitte eine .html-Datei wählen.",
+      storing: "Datei wird eingebunden …",
+      stored: "„{name}“ eingebunden und in der Präsentation gespeichert.",
+      storeFailed: "Die Datei konnte nicht gespeichert werden: {msg} – die Ansicht gilt nur bis zum Schließen der Präsentation.",
+      saveFailed: "Speichern fehlgeschlagen",
+      incomplete: "Gespeicherte Datei ist unvollständig (Teil {n} fehlt).",
+      loadFailed: "Gespeicherte Datei konnte nicht geladen werden: {msg}",
+      noOffice: "Office konnte nicht geladen werden. Bitte prüfe deine Internetverbindung und öffne die Präsentation neu."
+    },
+    en: {
+      emptyTitle: "Embed an HTML file in this slide",
+      emptyText: "The file is saved in the presentation and shown here interactively – also in slide show mode.",
+      pick: "Choose HTML file …", drop: "or drop the file here",
+      replace: "Replace file", reload: "Reload",
+      notHtml: "Please choose an .html file.",
+      storing: "Embedding file …",
+      stored: "“{name}” embedded and saved in the presentation.",
+      storeFailed: "The file could not be saved: {msg} – it is only shown until the presentation is closed.",
+      saveFailed: "Saving failed",
+      incomplete: "The saved file is incomplete (part {n} is missing).",
+      loadFailed: "The saved file could not be loaded: {msg}",
+      noOffice: "Office could not be loaded. Please check your internet connection and reopen the presentation."
+    }
+  };
+  var lang = "de";
+  function t(key, vars) {
+    var text = (TEXTS[lang] && TEXTS[lang][key]) || TEXTS.de[key] || key;
+    for (var k in (vars || {})) { text = text.split("{" + k + "}").join(vars[k]); }
+    return text;
+  }
+  function pickLang(code) { return /^de\b/i.test(code || "") ? "de" : "en"; }
+  function applyTexts() {
+    document.querySelectorAll("#addin [data-t]").forEach(function (el) { el.textContent = t(el.getAttribute("data-t")); });
+  }
 
   // ---------------------------------------------------------------- helpers
   function $(id) { return document.getElementById(id); }
@@ -271,7 +442,7 @@
     return new Promise(function (resolve, reject) {
       settings().saveAsync(function (r) {
         if (r.status === Office.AsyncResultStatus.Succeeded) { resolve(); }
-        else { reject(r.error || new Error("Speichern fehlgeschlagen")); }
+        else { reject(r.error || new Error(t("saveFailed"))); }
       });
     });
   }
@@ -297,7 +468,7 @@
     var b64 = "";
     for (var i = 0; i < count; i++) {
       var part = s.get(KEY_PREFIX + i);
-      if (typeof part !== "string") { throw new Error("Gespeicherte Datei ist unvollständig (Teil " + (i + 1) + " fehlt)."); }
+      if (typeof part !== "string") { throw new Error(t("incomplete", { n: i + 1 })); }
       b64 += part;
     }
     return await gunzip(base64ToBytes(b64));
@@ -327,22 +498,23 @@
   async function handleFile(file) {
     if (!file) { return; }
     if (!/\.html?$/i.test(file.name) && file.type !== "text/html") {
-      status("Bitte eine .html-Datei wählen.", "error");
+      status(t("notHtml"), "error");
       return;
     }
     try {
-      status("Datei wird eingebunden …", "info", true);
+      status(t("storing"), "info", true);
       var html = await file.text();
       await storeHtml(html, file.name);
       render(html);
-      status("„" + file.name + "“ eingebunden und in der Präsentation gespeichert.", "info");
+      status(t("stored", { name: file.name }), "info");
     } catch (err) {
-      status("Die Datei konnte nicht gespeichert werden: " + (err && err.message ? err.message : err) +
-        " – die Ansicht gilt nur bis zum Schließen der Präsentation.", "error", true);
+      status(t("storeFailed", { msg: err && err.message ? err.message : String(err) }), "error", true);
     }
   }
 
   function startAddin() {
+    lang = pickLang(Office.context.displayLanguage || navigator.language);
+    applyTexts();
     show($("addin"), true);
     var input = $("file");
     $("pick").addEventListener("click", function () { input.click(); });
@@ -374,12 +546,35 @@
 
     loadHtml().then(render).catch(function (err) {
       render(null);
-      status("Gespeicherte Datei konnte nicht geladen werden: " + err.message, "error", true);
+      status(t("loadFailed", { msg: err.message }), "error", true);
     });
   }
 
   // ---------------------------------------------------------------- setup page
-  function startSetup() { show($("setup"), true); }
+  function setSetupLang(code) {
+    document.querySelectorAll("#setup .lang-block").forEach(function (el) {
+      show(el, el.getAttribute("data-lang") === code);
+    });
+    document.querySelectorAll("#setup [data-set-lang]").forEach(function (a) {
+      a.classList.toggle("active", a.getAttribute("data-set-lang") === code);
+    });
+    document.documentElement.lang = code;
+    document.title = code === "en" ? "ECharts in PowerPoint – Guide" : "ECharts in PowerPoint – Anleitung";
+  }
+
+  function startSetup() {
+    var m = /[?&]lang=(de|en)\b/.exec(location.search);
+    setSetupLang(m ? m[1] : pickLang(navigator.language));
+    document.querySelectorAll("#setup [data-set-lang]").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var code = a.getAttribute("data-set-lang");
+        setSetupLang(code);
+        try { history.replaceState(null, "", "?lang=" + code + location.hash); } catch (err) { /* address bar stays as is */ }
+      });
+    });
+    show($("setup"), true);
+  }
 
   // ---------------------------------------------------------------- start
   if (isAddin && typeof Office !== "undefined") {
@@ -387,7 +582,9 @@
   } else if (isAddin) {
     show($("addin"), true);
     render(null);
-    status("Office konnte nicht geladen werden. Bitte prüfe deine Internetverbindung und öffne die Präsentation neu.", "error", true);
+    lang = pickLang(navigator.language);
+    applyTexts();
+    status(t("noOffice"), "error", true);
   } else {
     startSetup();
   }
