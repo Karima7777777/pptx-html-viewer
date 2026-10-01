@@ -100,8 +100,13 @@
 <!-- Setup page (opened in a normal browser) -->
 <div id="setup" class="hidden">
   <h1>ECharts aus KNIME in PowerPoint</h1>
-  <p class="lead">Mit diesen zwei Erweiterungen erstellen Sie interaktive Diagramme in KNIME und zeigen sie
-    interaktiv in PowerPoint. Sie brauchen keine Programmierkenntnisse – folgen Sie einfach den Schritten.</p>
+  <p class="lead">Du kennst den <b>Generic ECharts View</b> in KNIME? Mit diesen zwei Erweiterungen nimmst du deine
+    ECharts-Diagramme mit in PowerPoint – und sie bleiben dort interaktiv. Du brauchst keine Programmierkenntnisse,
+    folge einfach den Schritten.</p>
+
+  <p class="note"><b>Hinweis:</b> Beide Erweiterungen sind ein KI-gestütztes Eigenprojekt und kein offizielles Produkt
+    von KNIME oder Microsoft. Sie werden so zur Verfügung gestellt, wie sie sind – <b>ohne Support</b>.
+    Die Nutzung erfolgt auf eigene Verantwortung.</p>
 
   <nav class="toc">
     <a href="#knime">Teil 1 – KNIME-Erweiterung</a>
@@ -117,7 +122,7 @@
       <strong>Schritt 1: Datei herunterladen</strong>
       <p>Die Datei ist ca. 660 MB groß – der Download kann einige Minuten dauern.</p>
       <a class="button primary" href="https://github.com/Karima7777777/pptx-html-viewer/releases/latest/download/ECharts-Export-KNIME-1.0.0.zip">KNIME-Erweiterung herunterladen (.zip)</a>
-      <p class="note">Wichtig: Die ZIP-Datei <b>nicht entpacken</b>. Verschieben Sie sie in einen Ordner, in dem sie
+      <p class="note">Wichtig: Die ZIP-Datei <b>nicht entpacken</b>. Verschiebe sie in einen Ordner, in dem sie
         bleiben darf, z. B. <code>Dokumente</code>.</p>
     </div>
     <ol>
@@ -135,7 +140,7 @@
         <span class="muted">(Normal – die Erweiterung ist nicht von KNIME selbst signiert.)</span></li>
       <li>Auf <b>Restart Now</b> klicken. Nach dem Neustart richtet KNIME die Erweiterung ein (kann einige Minuten dauern).</li>
     </ol>
-    <p class="ok">Fertig, wenn Sie im Node-Repository unter <b>ECharts Export</b> den Node <b>ECharts View &amp; Export</b> finden.</p>
+    <p class="ok">Fertig, wenn du im Node-Repository unter <b>ECharts Export</b> den Node <b>ECharts View &amp; Export</b> findest.</p>
   </section>
 
   <section id="ppt-win">
@@ -149,10 +154,10 @@
     <ol>
       <li>PowerPoint schließen.</li>
       <li>Die heruntergeladene Datei <b>HTML-Viewer-installieren-Windows.cmd</b> doppelklicken
-        (zu finden im Ordner <b>Downloads</b>).</li>
+        (du findest sie im Ordner <b>Downloads</b>).</li>
       <li>Falls Windows „Der Computer wurde durch Windows geschützt“ meldet:
         <b>Weitere Informationen</b> → <b>Trotzdem ausführen</b>.
-        <span class="muted">(Die Datei trägt nur das Add-in in PowerPoint ein – nur für Ihr Benutzerkonto, ohne Administratorrechte.)</span></li>
+        <span class="muted">(Die Datei trägt nur das Add-in in PowerPoint ein – nur für dein Benutzerkonto, ohne Administratorrechte.)</span></li>
       <li>Es öffnet sich ein schwarzes Fenster mit „Fertig!“ → eine beliebige Taste drücken.</li>
       <li>PowerPoint öffnen → Reiter <b>Start</b> → ganz rechts <b>Add-Ins</b> → <b>Weitere Add-Ins</b>.</li>
       <li>Oben <b>Meine Add-Ins</b> wählen. Unter <b>Entwickler-Add-Ins</b> steht <b>HTML-Viewer</b> → anklicken → <b>Hinzufügen</b>.</li>
@@ -182,17 +187,18 @@
   <section id="nutzen">
     <h2>Teil 3 – Verwenden</h2>
     <ol>
-      <li><b>In KNIME:</b> Node <b>ECharts View &amp; Export</b> in den Workflow ziehen und an Ihre Tabelle anschließen.</li>
-      <li>Doppelklick auf den Node → ECharts-Code einfügen → bei <b>Export-Datei</b> einen Pfad angeben,
-        z. B. <code>C:\Export\diagramm.json</code> → Haken bei <b>HTML-Datei speichern</b> lassen → <b>OK</b>.</li>
+      <li><b>In KNIME:</b> Node <b>ECharts View &amp; Export</b> in den Workflow ziehen und an deine Tabelle anschließen.</li>
+      <li>Doppelklick auf den Node → deinen ECharts-Code einfügen (genau wie im Generic ECharts View) →
+        bei <b>Export-Datei</b> einen Pfad angeben, z. B. <code>C:\Export\diagramm.json</code> →
+        Haken bei <b>HTML-Datei speichern</b> lassen → <b>OK</b>.</li>
       <li>Node ausführen. Neben der JSON-Datei liegt jetzt <b>diagramm.html</b>.</li>
       <li><b>In PowerPoint:</b> Folie öffnen → <b>Start</b> → <b>Add-Ins</b> → <b>HTML-Viewer</b>.</li>
       <li>Rahmen auf die gewünschte Größe ziehen → <b>HTML-Datei wählen …</b> → <b>diagramm.html</b> auswählen.</li>
       <li>Präsentation speichern. In der Bildschirmpräsentation (F5) ist das Diagramm interaktiv.</li>
     </ol>
-    <p class="note">Gut zu wissen: Das Diagramm wird in der .pptx gespeichert und nirgendwo hochgeladen.
+    <p class="note">Gut zu wissen: Das Diagramm wird in deiner .pptx gespeichert und nirgendwo hochgeladen.
       Beim Öffnen der Präsentation braucht PowerPoint Internet, um das Add-in zu laden.
-      Wer Ihre Präsentation öffnet, braucht ebenfalls das Add-in (Teil 2) – sonst erscheint ein Platzhalter.</p>
+      Wer deine Präsentation öffnet, braucht ebenfalls das Add-in (Teil 2) – sonst erscheint ein Platzhalter.</p>
   </section>
 </div>
 
@@ -363,7 +369,7 @@
   } else if (isAddin) {
     show($("addin"), true);
     render(null);
-    status("Office konnte nicht geladen werden. Bitte Internetverbindung prüfen und die Präsentation neu öffnen.", "error", true);
+    status("Office konnte nicht geladen werden. Bitte prüfe deine Internetverbindung und öffne die Präsentation neu.", "error", true);
   } else {
     startSetup();
   }
